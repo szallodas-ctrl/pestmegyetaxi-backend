@@ -115,7 +115,17 @@ app.get('/api/auth/profile/:userId', async (req, res) => {
 
 // Simple driver registration (no auth required)
 app.post('/api/drivers/register', async (req, res) => {
-  const { name, phone, license_plate, car_model, car_color } = req.body;
+  const { 
+    name, 
+    phone, 
+    license_number,
+    license_plate, 
+    car_make,
+    car_model,
+    car_year,
+    car_color,
+    car_photo_url
+  } = req.body;
   
   try {
     const { data, error } = await supabase
@@ -123,9 +133,13 @@ app.post('/api/drivers/register', async (req, res) => {
       .insert([{
         name,
         phone,
+        license_number,
         license_plate,
+        car_make,
         car_model,
+        car_year,
         car_color,
+        car_photo_url,
         status: 'pending',
         is_available: false,
         rating: 5.0,
