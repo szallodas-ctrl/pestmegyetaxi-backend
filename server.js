@@ -113,6 +113,35 @@ app.get('/api/auth/profile/:userId', async (req, res) => {
 
 // ==================== DRIVER ENDPOINTS ====================
 
+// Simple driver registration (no auth required)
+app.post('/api/drivers/register', async (req, res) => {
+  const { name, phone, license_plate, car_model, car_color } = req.body;
+  
+  try {
+    const { data, error } = await supabase
+      .from('drivers')
+      .insert([{
+        name,
+        phone,
+        license_plate,
+        car_model,
+        car_color,
+        status: 'pending',
+        is_available: false,
+        rating: 5.0,
+        total_rides: 0
+      }])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    
+    res.json({ success: true, driver: data });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+});
+
 // Update driver availability
 app.post('/api/driver/availability', async (req, res) => {
   const { driverId, isAvailable } = req.body;
