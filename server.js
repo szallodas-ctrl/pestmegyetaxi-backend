@@ -19,10 +19,32 @@ const io = new Server(server, {
 });
 
 // Middleware
-app.use(cors({
-  origin: ['https://pestmegyetaxi.hu', 'https://sofor.pestmegyetaxi.hu'],
-  credentials: true
-}));
+// CORS Configuration
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://pestmegyetaxi.hu',
+      'https://sofor.pestmegyetaxi.hu',
+      'http://localhost:3000' // for local testing
+    ];
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
 app.use(express.json());
 
 // Supabase client
