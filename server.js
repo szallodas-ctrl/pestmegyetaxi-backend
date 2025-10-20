@@ -3,6 +3,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 const http = require('http');
 const { Server } = require('socket.io');
 const { createClient } = require('@supabase/supabase-js');
@@ -126,6 +127,10 @@ app.post('/api/drivers/register', async (req, res) => {
     car_color,
     car_photo_url
   } = req.body;
+
+  // Hash the password
+  const saltRounds = 10;
+  const password_hash = await bcrypt.hash(password, saltRounds);
   
   try {
     const { data, error } = await supabase
@@ -133,6 +138,7 @@ app.post('/api/drivers/register', async (req, res) => {
       .insert([{
         name,
         phone,
+        password_hash,
         license_number,
         license_plate,
         car_make,
