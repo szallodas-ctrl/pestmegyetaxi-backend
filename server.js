@@ -19,7 +19,10 @@ const io = new Server(server, {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://pestmegyetaxi.hu', 'https://sofor.pestmegyetaxi.hu'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Supabase client
