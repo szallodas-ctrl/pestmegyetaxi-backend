@@ -143,7 +143,8 @@ app.get('/api/auth/profile/:userId', async (req, res) => {
 app.post('/api/drivers/register', async (req, res) => {
   const { 
     name, 
-    phone, 
+    phone,
+    password,
     license_number,
     license_plate, 
     car_make,
